@@ -11,7 +11,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Managed
@@ -19,7 +21,7 @@ public class ChunkTransformer implements Listener {
 
 	private static final int MAX_THICKNESS = 2;
 
-	private static final Set<Long> TRANSFORMED = new HashSet<>();
+	//private static final Set<Long> TRANSFORMED = new HashSet<>();
 
 	@Inject
 	Logger logger;
@@ -42,10 +44,10 @@ public class ChunkTransformer implements Listener {
 	}
 
 	private void transformChunk(Chunk chunk) {
-		long chunkId = (chunk.getWorld().getUID().getLeastSignificantBits() << 32) + ((long) chunk.getX() << 16) + chunk.getZ();
-		if (!TRANSFORMED.add(chunkId)) {
-			return;
-		}
+		//long chunkId = (chunk.getWorld().getUID().getLeastSignificantBits() << 32) + ((long) chunk.getX() << 16) + chunk.getZ();
+		//if (!TRANSFORMED.add(chunkId)) {
+		//	return;
+		//	}
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				transformColumn(chunk, x, z);
