@@ -58,30 +58,24 @@ public class ChunkTransformer implements Listener {
 		int blockX = (chunk.getX() << 4) + x;
 		int blockZ = (chunk.getZ() << 4) + z;
 		var highestBlock = world.getHighestBlockAt(blockX, blockZ);
-		if (highestBlock.getY() > MAX_THICKNESS) {
-			// find surface materials
-			var topMaterial = getMaterials(chunk, x, highestBlock.getY(), z);
+		// find surface materials
+		var topMaterial = getMaterials(chunk, x, highestBlock.getY(), z);
 
-			if (topMaterial.isEmpty()) {
-				return;
-			}
+		// erase terrain
+		for (int y = Math.max(highestBlock.getY(), 64); y >= topMaterial.size(); y--) {
+			var block = chunk.getBlock(x, y, z);
+			if (block.getType() != Material.AIR)
+				block.setType(Material.AIR, false, true);
+		}
 
-			// erase terrain
-			for (int y = Math.max(highestBlock.getY(), 64); y >= topMaterial.size(); y--) {
-				var block = chunk.getBlock(x, y, z);
-				if (block.getType() != Material.AIR)
-					block.setType(Material.AIR, false, true);
-			}
-
-			// place flat surface
-			Collections.reverse(topMaterial);
-			int y = 0;
-			for (var top : topMaterial) {
-				var block = chunk.getBlock(x, y, z);
-				if (block.getType() != top.left())
-					block.setTypeIdAndData(top.left().getId(), top.right(), false);
-				y++;
-			}
+		// place flat surface
+		Collections.reverse(topMaterial);
+		int y = 0;
+		for (var top : topMaterial) {
+			var block = chunk.getBlock(x, y, z);
+			if (block.getType() != top.left())
+				block.setTypeIdAndData(top.left().getId(), top.right(), false);
+			y++;
 		}
 	}
 
